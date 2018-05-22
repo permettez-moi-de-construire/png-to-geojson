@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:permettez-moi-de-construire/webpack-library-starter.git"
+    "url": "git@github.com:permettez-moi-de-construire/png-to-geojson.git"
   },
   "keywords": [
     "es6",
@@ -26,9 +26,9 @@
   "author": "Cyril CHAPON",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/permettez-moi-de-construire/webpack-library-starter/issues"
+    "url": "https://github.com/permettez-moi-de-construire/png-to-geojson/issues"
   },
-  "homepage": "https://github.com/permettez-moi-de-construire/webpack-library-starter",
+  "homepage": "https://github.com/permettez-moi-de-construire/png-to-geojson",
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.42",
     "@babel/core": "7.0.0-beta.42",
