@@ -13,6 +13,11 @@
     "test:watch": "mocha --require @babel/register --colors -w --recursive ./test/**/*.js",
     "prepare": "npm run build"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm build"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:permettez-moi-de-construire/png-to-geojson.git"
@@ -42,6 +47,7 @@
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-loader": "^2.0.0",
+    "husky": "^1.0.0-rc.6",
     "mocha": "^4.0.1",
     "sinon": "^4.4.6",
     "standard": "^11.0.1",
