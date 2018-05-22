@@ -9,7 +9,8 @@
     "build": "npm run compile && npm run test",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require @babel/register --colors --recursive ./test/**/*.js",
-    "test:watch": "mocha --require @babel/register --colors -w --recursive ./test/**/*.js"
+    "test:watch": "mocha --require @babel/register --colors -w --recursive ./test/**/*.js",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
