@@ -1,7 +1,4 @@
-const webpack = require('webpack')
-const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
 const path = require('path')
-const env = require('yargs').argv.env
 const pkg = require('./package.json')
 const _ = require('lodash')
 
@@ -9,26 +6,15 @@ const packageName = pkg.name.split('/').pop()
 
 const libraryName = _.camelCase(packageName)
 const fileName = _.kebabCase(packageName)
-
-let plugins = []
-let outputFile
-
-if (env === 'build') {
-  plugins.push(new UglifyJsPlugin({ minimize: true }))
-  outputFile = fileName + '.min.js'
-} else {
-  outputFile = fileName + '.js'
-}
+const outputFile = fileName + '.js'
 
 const config = {
-  entry: __dirname + '/src/index.js',
-  devtool: 'source-map',
+  entry: path.join(__dirname, '/src/index.js'),
+  target: 'node',
   output: {
-    path: __dirname + '/lib',
+    path: path.join(__dirname, '/lib'),
     filename: outputFile,
-    library: libraryName,
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    library: libraryName
   },
   module: {
     rules: [
@@ -48,19 +34,10 @@ const config = {
       }
     ]
   },
-  externals: {
-    lodash: {
-      commonjs: 'lodash',
-      commonjs2: 'lodash',
-      amd: '_',
-      root: '_'
-    }
-  },
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
     extensions: ['.json', '.js']
-  },
-  plugins: plugins
+  }
 }
 
 module.exports = config

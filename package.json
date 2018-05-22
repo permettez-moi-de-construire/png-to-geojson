@@ -1,10 +1,11 @@
 {
-  "name": "mylibrary",
+  "name": "@permettezmoideconstruire/png-to-geojson",
   "version": "0.0.1",
   "description": "DESCRIPTION HERE",
-  "main": "lib/mylibrary.js",
+  "main": "lib/index.js",
   "scripts": {
-    "compile": "webpack --env dev && webpack --env build",
+    "compileback": "webpack --env dev && webpack --env build",
+    "compile": "babel src -d lib",
     "build": "npm run compile && npm run test",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require @babel/register --colors --recursive ./test/**/*.js",
@@ -47,6 +48,15 @@
     "yargs": "^10.0.3"
   },
   "dependencies": {
-    "lodash": "^4.17.5"
+    "@mapbox/tilebelt": "^1.0.1",
+    "@turf/turf": "^5.1.6",
+    "d3": "^5.4.0",
+    "d3-scale": "^2.0.0",
+    "fs-extra": "^6.0.1",
+    "jimp": "^0.2.28",
+    "potrace": "^2.1.1",
+    "svg2geojson": "^0.7.0",
+    "xml-js": "^1.6.3",
+    "xml2js": "^0.4.19"
   }
 }
