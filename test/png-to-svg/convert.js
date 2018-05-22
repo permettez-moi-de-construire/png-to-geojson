@@ -14,11 +14,9 @@ sinon.assert.expose(assert, { prefix: '' })
 describe('PngToSvg class', () => {
   describe('convert method', () => {
     it('should resolve', () => {
-      const pngToSvg = new PngToSvg()
       const inputFilePath = path.resolve(__dirname, '../../tile.png')
 
-      return pngToSvg.convert(inputFilePath)
-        .then(console.log)
+      return PngToSvg.convert(inputFilePath)
     })
   })
 })
