@@ -1,6 +1,7 @@
 const { xml2js, js2xml } = require('xml-js')
 const { geoFromSVGXML } = require('svg2geojson')
 const { polygonize } = require('@turf/turf')
+const { get: deepGet } = require('lodash')
 
 class SvgToGeojson {
   static convert (svgString, bbox) {
@@ -8,7 +9,7 @@ class SvgToGeojson {
 
     // <GeoItem X="0" Y="256" Latitude="49.023461463214126" Longitude="7.73437499999999"/>
     // <GeoItem X="256" Y="0" Latitude="49.03786794532644" Longitude="7.756347656250005"/>
-    const svgObjectWithCoordsMeta = {
+    let svgObjectWithCoordsMeta = {
       ...svgObject,
       svg: {
         ...svgObject.svg,
@@ -24,21 +25,82 @@ class SvgToGeojson {
       }
     }
 
+    const emptyFeatureCol = {
+      type: 'FeatureCollection',
+      features: []
+    }
+
+    // No path
+    if (!deepGet(svgObjectWithCoordsMeta, 'svg.path')) {
+      return Promise.resolve(emptyFeatureCol)
+    }
+
+    // Single, empty path
+    if (
+      typeof svgObjectWithCoordsMeta.svg.path === 'object' &&
+      !Array.isArray(svgObjectWithCoordsMeta.svg.path) &&
+      !deepGet(svgObjectWithCoordsMeta.svg.path, '_attributes.d')
+    ) {
+      return Promise.resolve(emptyFeatureCol)
+    }
+
+    if (
+      typeof svgObjectWithCoordsMeta.svg.path === 'object' &&
+      Array.isArray(svgObjectWithCoordsMeta.svg.path)
+    ) {
+      svgObjectWithCoordsMeta = {
+        ...svgObjectWithCoordsMeta,
+        svg: {
+          ...svgObjectWithCoordsMeta.svg,
+          path: svgObjectWithCoordsMeta.svg.path.filter(
+            internalPath => !!internalPath._attributes.d
+          )
+        }
+      }
+    }
+
+    // Multiple paths
+    if (
+      typeof svgObjectWithCoordsMeta.svg.path === 'object' &&
+      Array.isArray(svgObjectWithCoordsMeta.svg.path)
+    ) {
+      // Remove empty paths
+      svgObjectWithCoordsMeta = {
+        ...svgObjectWithCoordsMeta,
+        svg: {
+          ...svgObjectWithCoordsMeta.svg,
+          path: svgObjectWithCoordsMeta.svg.path.filter(
+            internalPath => !!internalPath._attributes.d
+          )
+        }
+      }
+
+      // Empty paths array
+      if (!svgObjectWithCoordsMeta.svg.path.length) {
+        return Promise.resolve(emptyFeatureCol)
+      }
+    }
+
     const svgStringWithCoordsMeta = js2xml(svgObjectWithCoordsMeta, {compact: true})
 
     return new Promise(resolve => geoFromSVGXML(svgStringWithCoordsMeta, resolve))
-      .then(feature => feature && ['MultiPolygon', 'Polygon'].includes(feature.type) ? (
-        feature
-      ) : (
-        polygonize(feature)
-      ))
-    // .then(feature => {
-      //   return feature && (feature.type === 'Polygon' || feature.type === 'MultiPolygon') ? (
-      //     feature
-      //   ) : (
-      //     polygonize(feature)
-      //   )
+      .then(featureCollection => ({
+        ...featureCollection,
+        features: featureCollection.features.map(feature => feature && ['MultiPolygon', 'Polygon'].includes(feature.geometry.type) ? (
+          feature
+        ) : (
+          polygonize(feature)
+        ))
+      }))
+      // .then(feature => {
+      //   console.log(feature)
+      //   return feature
       // })
+      // .then(feature => feature && ['MultiPolygon', 'Polygon'].includes(feature.type) ? (
+      //   feature
+      // ) : (
+      //   polygonize(feature)
+      // ))
   }
 }
 
