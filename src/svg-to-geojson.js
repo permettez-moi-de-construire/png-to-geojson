@@ -1,6 +1,6 @@
 const { xml2js, js2xml } = require('xml-js')
 const { geoFromSVGXML } = require('svg2geojson')
-const { polygonize } = require('@turf/turf')
+const { lineToPolygon } = require('@turf/turf')
 const { get: deepGet } = require('lodash')
 
 class SvgToGeojson {
@@ -89,18 +89,9 @@ class SvgToGeojson {
         features: featureCollection.features.map(feature => feature && ['MultiPolygon', 'Polygon'].includes(feature.geometry.type) ? (
           feature
         ) : (
-          polygonize(feature)
+          lineToPolygon(feature)
         ))
       }))
-      // .then(feature => {
-      //   console.log(feature)
-      //   return feature
-      // })
-      // .then(feature => feature && ['MultiPolygon', 'Polygon'].includes(feature.type) ? (
-      //   feature
-      // ) : (
-      //   polygonize(feature)
-      // ))
   }
 }
 
