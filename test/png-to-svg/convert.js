@@ -45,10 +45,30 @@ describe('PngToSvg class', () => {
 
     testTilesFiles
       .forEach(testTileFile => {
-        it(`${testTileFile} should resolve`, () => {
+        it(`${testTileFile} should work with a path`, () => {
           const inputFilePath = path.resolve(dataPath, testTileFile)
 
           return PngToSvg.convert(inputFilePath)
+        })
+      })
+
+    testTilesFiles
+      .forEach(testTileFile => {
+        it(`${testTileFile} should work with a buffer`, () => {
+          const inputFilePath = path.resolve(dataPath, testTileFile)
+
+          return fs.readFile(inputFilePath)
+            .then(inputFileBuffer => PngToSvg.convert(inputFileBuffer))
+        })
+      })
+
+    testTilesFiles
+      .forEach(testTileFile => {
+        it(`${testTileFile} should work with a Jimp instance`, () => {
+          const inputFilePath = path.resolve(dataPath, testTileFile)
+
+          return Jimp.read(inputFilePath)
+            .then(inputFileJimp => PngToSvg.convert(inputFileJimp))
         })
       })
 
