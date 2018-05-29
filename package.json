@@ -41,6 +41,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.42",
     "@babel/preset-env": "7.0.0-beta.42",
     "@babel/register": "^7.0.0-beta.42",
+    "@turf/invariant": "^6.0.1",
     "babel-eslint": "^8.2.2",
     "babel-loader": "^8.0.0-beta.0",
     "babel-plugin-add-module-exports": "^0.2.1",
